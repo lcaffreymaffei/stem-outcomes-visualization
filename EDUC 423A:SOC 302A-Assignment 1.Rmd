@@ -1,0 +1,255 @@
+---
+title: 'EDUC 423A/SOC 302A: Assignment 1'
+author: "Lucy Caffrey-Maffei"
+date: "10/6/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Honor Code Statement
+
+We strongly encourage students to form study groups and students may discuss and work on assignments in groups. We expect that each student understands their own submission. As such, students must write their submissions independently and clearly disclose the names of all other students who were part of their study group. Additionally, lifting code or solutions directly from the internet (e.g., Google, GitHub, Stack Overflow) is a violation of the [Stanford Honor Code](https://communitystandards.stanford.edu/policies-and-guidance/honor-code). We take academic honesty and Honor Code violations extremely seriously and expect the same of students. If you have questions about what may or may not constitute an Honor Code violation, please reach out the teaching team.
+
+**Email: [l.caffreymaffei\@stanford.edu](mailto:l.caffreymaffei@stanford.edu){.email}**
+
+**SUID: lacm23/06527423**
+
+**Study Group:** Laura Hinton
+
+I acknowledge and agree to abide by the Honor Code.
+
+**Signed: Lucy Caffrey-Maffei, October 6, 2021**
+
+# Setup
+
+```{r import, echo=TRUE}
+# Include all code required to load packages and import data here.
+# The echo=TRUE flag ensures that the code will appear in your submission.
+
+library(gganimate)
+library(gifski)
+library(tidyverse)
+
+hwone <- read_csv("EDUC423A_HSL.csv")
+
+```
+
+\newpage
+
+# Univariate Plot
+
+```{r univariate, echo=TRUE}
+# Include all code required to generate your visualization here.
+
+ggplot(hwone) + 
+  geom_histogram(aes( x = credits_stem), binwidth = 1, fill ='darkolivegreen3') +
+  labs(x = "STEM Credits Taken", title = "Figure 1. Number of STEM Credits Taken by High Schoolers", subtitle = "The High School Longitudinal Study, 2009 - 2013") +
+  scale_x_continuous(breaks = 0:8) +
+  theme_classic()+ 
+  theme(axis.text.x = element_text(color = "gray26", size = 9),
+        plot.title = element_text(color = "gray26", size = 16),
+        plot.subtitle = element_text(color = "gray26", size =12),
+        axis.text.y = element_text(color = "gray26", size = 9),
+        axis.title.x = element_text(color = "gray26", size = 12),
+        axis.title.y = element_text(color = "gray26", size = 12))
+
+ggsave("regression_bivariate_stemcredits_assignment1.png")
+```
+
+\newpage
+
+# Bivariate Plot
+
+```{r bivariate, echo=TRUE}
+# Include all code required to generate your visualization here.
+
+
+ggplot(hwone) +
+  geom_smooth(aes(x = self_concept_ability_math, 
+                  y = credits_stem), color = 'darkolivegreen3')+
+  labs(color = "Gender", title = "Figure 2. Effects of Math Self-Concept on STEM Credits Taken", subtitle = "The High School Longitudinal Study, 2009 - 2013", y = "STEM Credits", x ="Self-Concept of Math Abilities" )+
+  theme_classic() +
+  theme(axis.text.x = element_text(color = "gray26", size = 9),
+        plot.title = element_text(color = "gray26", size = 16),
+        plot.subtitle = element_text(color = "gray26", size =12),
+        axis.text.y = element_text(color = "gray26", size = 9),
+        axis.title.x = element_text(color = "gray26", size = 12),
+        axis.title.y = element_text(color = "gray26", size = 12))
+
+ggsave("regression_cbivariate_stemcredits_assignment1.png")
+```
+
+\newpage
+
+# Comparative Bivariate Plot
+
+```{r com_bivariate, echo=TRUE}
+# Include all code required to generate your visualization here.
+
+
+ggplot(hwone) +
+  geom_smooth(aes(x = self_concept_ability_math, 
+                  y = credits_stem,
+                  color = factor(female, 
+                                 ordered = TRUE, 
+                                 levels = c(0,1),
+                                 labels = c("Male","Female"))))+
+  scale_color_manual(values = c("royalblue4","dodgerblue2"))+
+  labs(color = "Gender", title = "Figure 3. Math Self-Concept on STEM Credits Taken, by Student Gender", subtitle = "The High School Longitudinal Study, 2009 - 2013", y = "STEM Credits", x ="Self-Concept of Math Abilities" )+
+  theme_classic() +
+  theme(axis.text.x = element_text(color = "gray26", size = 9),
+        plot.title = element_text(color = "gray26", size = 16),
+        plot.subtitle = element_text(color = "gray26", size =12),
+        axis.text.y = element_text(color = "gray26", size =9),
+        axis.title.x = element_text(color = "gray26", size = 12),
+        axis.title.y = element_text(color = "gray26", size = 12),
+        legend.text = element_text(color = "gray26", size = 12),
+        legend.title = element_text(color = "gray26"),
+        legend.position = c(.8,.8))
+
+ggsave("regression_cbivariate_stemcredits_assignment1.png")
+```
+
+\newpage
+
+# Discussion
+
+*Using your visualizations, address the research question. Be sure to discuss the design decisions you made in creating your visualizations and how they impact the appropriateness of your visualizations for answering the research question. Please refer to the evaluation criteria in the assignment description on Canvas.*
+
+**The Research Question**
+
+*Discussion*
+
+With the emergence of the newest wave of feminism, much has been said about the presence---or lack thereof---of women in STEM fields. Many point to the socialization of girls and women as a factor that has traditionally forced women to shy away from or self-select out of STEM disciplines.  
+
+Much of this socialization happens within K-12 classrooms. Especially as students approach and move through high school, more importance is placed on STEM courses. Some courses are required, while others are elective. The question becomes: who is opting into STEM classes? And, what factors influence students to opt in, or out, of those courses? 
+
+Figure 1 shows the distribution of the number of STEM credits surveyed high schoolers took over the course of their high school career. In this case, one credit is equivalent to taking a year's long course that meets every day for one period.
+
+The results show that, while students range between 0 to 8 credits completed, the most common number of credits to take was 4. The mean and median number of credits are or are just shy of 4 also. What accounts for the variation in number of credits taken?
+
+Consider how one's self-perception of their skillset may influence what classes they decide to pursue. It seems logical that the less a student believes in their abilities to excel in a subject, the less inclined they would be to take that subject. Figure 2 shows that this assumption is true, at least of the impact of high schoolers self-concept of their math abilities on their taking of STEM credits. Plotted on the x-axis is a rating of students' self-concept of their math abilities, with a 1 meaning they're extremely confident and a 4 meaning they not at all confident. Plotted on the y-axis is the total of number of credits students took throughout their high school career. As the regression line trends downwards, this demonstrates that aversion to STEM classes grows as self-confidence in math declines.
+
+Since, historically, we have seen women underrepresented in STEM fields, perhaps we should expect to see this trend be particularly salient among girls. Figure 3, however, tells a different story. Although the same association between math self-concept and STEM credits is true of both male and female students, female students, on average, take more STEM credits over their high school career than do their male classmates. This is true on both ends of the math self-concept spectrum: both women who feel extremely confident and women who feel not at all confident in their math abilities take more STEM classes than do their male counterparts with the same level of math self-concept.
+
+*Conclusion*:
+
+There appears to be a positive association with high school students' self-concept of their math abilities and the number of STEM credits they take over the course of their high school career. That is, students with higher confidence in their math abilities are more likely to enroll in higher numbers of math credits. While one might expect this relationship to be particularly pronounced among girls -- because of their historical under-representation in STEM disciplines - that does not prove to be true. In fact, across the self-concept spectrum, girls were more likely than their male classmates to take a higher number of STEM credits in high school.
+
+**The Visualizations Used for this Question**
+
+I made a few design choices uniform across Figures 1, 2, and 3. I made this decision intentionally to make clear to the readers that the graphs were part of a collection, and that each one builds off the one before it.
+
+First, I changed the color of the plotted data from the traditional gray that comes with R to brighter colors. In both instances, I chose bright colors that make the actual data stand out from the labels and draw
+the audience's attention where the main story is. (More about color choices later). I also standardized the size and color of the font across all the graphs, making them all larger so that they are more readable to readers. The title of each graph has the largest font, but not too large that it takes attention away from the actual data. Lastly, I also changed the background of all the graphs to white (instead of the gray grid that is standard with R). This cut down the noise in the visualization, again ensuring that attention does not stray from the data.
+
+*Figure 1*
+
+I elected to use a histogram to plot my univariate statistics because histograms are suitable for continuous variables, which the variable at-hand is. Since the continuous data is plotted on a distribution, it also makes it easier for the audience to identify trends in the data (i.e. pick out basic summary statistics that tell the big headline for the data story).
+
+For Figures 1 and 2, I chose the same shade of green because the graphs talk about the same variable: STEM credits (although the latter looks at that variable with an additional control variable).
+
+*Figures 2 and 3*
+
+I chose to use the same graph types in Figures 2 and 3 because the latter is an extension of the former, but with comparison groups added. Uniting them under one visualization type signals to the reader that these are not different stories, but rather elaborations of each other. It also makes it easy for the reader to do comparisons between the two graphs.
+
+I selected a regression line because it's appropriate for two continuous variables. It's also a simple way to digest a lot of data. The scatterplot versions of this association were cluttered because there were so many observations plotted onto one graph.That made it hard to identify the relationship between the two variables (and in Figure 3, three variables). With this smooth regression line, the reader can quickly notice the linear relationship between the dependent and independent variables. With the shading around the line, readers can also see where there is more variation in the data. A boxplot, on the other hand, would not have shown this linear relationship -- just the different summary statistic outcomes of the dependent variable between the two groups (male and female).
+
+In the case of Figure 3, the reader can also see clearly that the two comparison groups have different outcomes. This was not obvious in the scatterplot because, again, there were so many observations that it was hard to make out their trend.
+
+For Figure 3, I switched the colors to two different shades of blue. Even though this figure uses the same x- an y-axes as Figure 2, the lines now represent genders, instead of all students. Changing the colors to blue from green signals to the audience that we are now comparing something different from the figure before. Moreover, I chose two shades of blue because it's easier to read for color-blind people and it prints well on paper. Blue, in the first place, is a color-blind-friendly color. Having two different colors next to each other increases the chances that a reader is unable to distinguish between the two colors. In this case, having one dark and one light shade of blue reduces that chance because, even if they can't see the color blue, they can tell they're different colors because one is dark and one is light. For this same reason, it would print well in black-and-white.
+
+\newpage
+
+# Your own question
+
+Now explore the other variables in this dataset and develop a question. Answer your question with data visualization.
+
+```{r yourquestion, echo=TRUE}
+# Include all code required to generate your visualization here.
+
+##cleaning data for first bivariate plot##
+gpa_stem_adjusted2 <-replace(hwone$gpa_stem,hwone$gpa_stem<0,NA)
+
+##cleaning data for second bivariate plot##
+female_only <- hwone |> filter(female==1)
+
+
+math_teacher_gender_adjusted <-replace(female_only$math_teacher_gender,female_only$math_teacher_gender>1,NA)
+
+gpa_stem_adjusted <-replace(female_only$gpa_stem,female_only$gpa_stem<0,NA)
+
+
+```
+
+```{r bivariate plot - gpa by student gender}
+
+ggplot(hwone) +
+  geom_boxplot(aes(x = female,
+                   group = factor(female,
+                                  levels = c(0, 1),
+                                  labels = c("Male", "Female")),
+                    y = gpa_stem_adjusted2,
+                    fill = female))+
+    scale_x_discrete(limits = c(0,1), labels = c("Male","Female")) +
+    labs(y = "GPA in STEM Classes", x = "Student Gender", 
+    title = "Figure 4. GPA in STEM Classes by Student Gender", subtitle = "The High School Longitudinal Study, 2009 - 2013") +
+    theme_classic()+
+    theme(legend.position = "none")+
+    theme(axis.text.x = element_text(color = "gray26", size = 9),
+          plot.title = element_text(color = "gray26", size = 16),
+          plot.subtitle = element_text(color = "gray26", size =12),
+          axis.text.y = element_text(color = "gray26", size =9),
+          axis.title.x = element_text(color = "gray26", size = 12),
+          axis.title.y = element_text(color = "gray26", size = 12))
+
+ggsave("boxplot_bivariate_stemgpa_assignment1.png")
+```
+
+```{r bivariate plot - gpa by teacher gender among girls}
+
+ggplot(female_only) +
+  geom_boxplot(aes(x = math_teacher_gender_adjusted,
+                   group = factor(math_teacher_gender_adjusted,
+                                  levels = c(0, 1, 3),
+                                  labels = c("Male", "Female","Unknown")),
+                    y = gpa_stem_adjusted,
+                    fill = math_teacher_gender_adjusted))+
+    scale_x_discrete(limits = c(0,1), labels = c("Male","Female")) +
+    labs(y = "GPA in STEM Classes", x = "Math Teacher Gender", title = "Figure 5. High School Girls' GPAs in STEM Classes by Math Teacher Gender", subtitle = "The High School Longitudinal Study, 2009 - 2013") +
+    theme_classic()+
+    theme(legend.position = "none")+
+    theme(axis.text.x = element_text(color = "gray26", size = 9),
+          plot.title = element_text(color = "gray26", size = 16),
+          plot.subtitle = element_text(color = "gray26", size =12),
+          axis.text.y = element_text(color = "gray26", size =9),
+          axis.title.x = element_text(color = "gray26", size = 12),
+          axis.title.y = element_text(color = "gray26", size = 12))
+
+ggsave("boxplot_cbivariate_stemgpa_assignment1.png")
+```
+
+# Discussion of Own Question
+
+**The Research Question**
+
+In the previous section, I demonstrated how high school girls elect to take more STEM classes over the course of their secondary academic career than do their male classmates, even among groups who don't feel confident in their math abilities. This begs the question: do girls also get better grades than boys in their STEM classes? And, are certain female students more likely to excel in STEM classes than others? I was particularly interested in if the gender of a female student's math teacher had an affect on their GPA in STEM courses.
+
+In this case, the GPA is calculated on a scale of 0 to 4.
+
+Figure 4 shows that girls and boys have the about the same median GPA in STEM courses. Notably, however, the 25th and 75th percentile of GPAs are higher for girls than they are for boys, suggesting that so too is the average GPA. Knowing this, does girls' performance in STEM classes have to do with their math teacher's gender?
+
+Figure 5 considers just female high school students and compares the grades of those who have a male math teacher versus those who have a female math teacher. The results are indistinguishable: girls who have female and male math teachers make equally as good grades. This suggests that there is no relationship between female students' math teacher's gender and their GPA in STEM classes.
+
+**The Visualizations Used for this Question**
+
+Like with Figures 1 through 3, I chose to make uniform decisions across the two figures used for this study. All of the font color, font size, and graph background decisions I made for Figures 1-3, I applied in Figures 4 and 5. Again, this helps establish connectivity across all the graphs so that the reader understands that I am elaborating on the same story of girls' and women's performance in STEM fields. For the same connectivity reason, I again chose to use the same type of graph for both Figures 4 and 5 so that the reader understands that they are connected and elaborations of each other.
+
+I chose to use boxplots for these graphs because I had one categorical variable (as a predictor) and one interval variable (as the dependent). This excluded my use of scatterplots and regression lines, since those are best for two continuous variables. I decided to forgo a bar chart--which was also suitable for my variable types--because those can only show one summary statistic. Boxplots give a more holistic view of outcomes by showing the median, interquartile range, maximum, and minimum of STEM GPAs. This allows readers to make easy comparison between the two boxes and have a more nuanced perspective on the outcomes of the independent variable on the dependent variable.
+
+Finally, I again changed the colors of the actual data visualizations from the traditional gray in order to make the outcomes center-stage. I decided to use the same color pairing for the boxplots as in Figure 3 when comparing male and female so as to create continuity for readers and lessen the new information that they have to keep track of. Repeating the same color combination should allow them to recognize the significance of the colors and make immediate interpretations of them, instead of having to digest and make sense of more new information.
